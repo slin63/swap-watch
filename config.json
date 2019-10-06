@@ -1,0 +1,36 @@
+{
+    "email": {
+        "sender_email": "",
+        "sender_email_password": "",
+        "receiver_email": ""
+    },
+    "queries": {
+        "limit": 10,
+        "subreddits": [
+            "ULGearTrade",
+            "hardwareswap"
+        ],
+        "search_terms": {
+            "ULGearTrade": [
+                "tarp",
+                "quilt",
+                "pack"
+            ],
+            "hardwareswap": [
+                "mac"
+            ]
+        },
+        "reject_terms": {
+            "ULGearTrade": [
+                "wtb"
+            ],
+            "hardwareswap": [
+                "cash"
+            ]
+        }
+    },
+    "database": {
+        "in_memory": true,
+        "db_name": "swap-watch.db"
+    }
+}

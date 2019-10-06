@@ -7,11 +7,12 @@ from typing import Dict, List
 
 from db import existing_ids, add_new_posts
 from config import (
-    LOGGER,
     SEARCH_TERMS,
     REJECT_TERMS,
     APP_NAME
 )
+from logs import LOGGER
+
 
 def parse_json_response(json_response: Dict) -> List[Dict]:
     """
@@ -78,32 +79,34 @@ def filter_results(posts: List[Dict], sub: str) -> List[Dict]:
 def format_response(posts: Dict) -> str:
     header = f'{APP_NAME} results for [{datetime.now()}]:'
     body = ''
-    for sub in posts:
-        new_posts = posts[sub]
-        for post in new_posts:
-            post_str = _format_post(post)
 
-    return ''
+    for sub in posts:
+        body += f'r/{sub} results:\n------'
+        new_posts = posts[sub]
+
+        for post in new_posts:
+            body += _format_post(post)
+
+        body += '\n'
+
+    return body.strip()
 
 
 def _format_post(post: Dict) -> str:
-    link_post = __hyperlink(post['url'], post['title'])
-    link_message = __hyperlink(f"https://www.reddit.com/message/compose/?to={post['username']}", f"Message {post['username']} now!")
-    matched_because = f"Matching terms: <b>{', '.join(post['matches'])}</b>"
+    link_message = f"Message poster: https://www.reddit.com/message/compose/?to={post['username']}"
+    matched_because = f"Matching terms: {', '.join(post['matches'])}"
     time_since_post = __human_readable_timedelta(datetime.now() - post['created_utc'])
 
     body = f"""
-<h4>{link_post}</h4>
-<h5>Posted {time_since_post}.</h5>
-<h5>{link_message}</h5>
-{matched_because}
+->  {post['title']}
+        {post['url']}
+        Posted {time_since_post}.
+        {link_message}
+        {matched_because}
 """
 
     return body
 
-
-def __hyperlink(url: str, text: str) -> str:
-    return f'<a href=\"{url}\">{text}</a>'
 
 
 def __human_readable_timedelta(dt: timedelta) -> str:
@@ -114,13 +117,17 @@ def __human_readable_timedelta(dt: timedelta) -> str:
     hours = math.floor((dt.seconds - (math.floor(days) * 86400)) / 3600)
     minutes = math.floor((dt.seconds - (math.floor(hours) * 3600)) / 60)
 
+    # Properly render plural or non-plural time units
+    minute_str = 'minutes' if minutes > 1 else 'minute'
+    hour_str = 'hours' if hours > 1 else 'hour'
+
     # Timedelta less than one hour
     if not hours and not days and minutes:
-        return f'{minutes} minutes ago'
+        return f'{minutes} {minute_str} ago'
 
     # Timedelta less than one day
     elif not days and hours:
-        return f'{hours} hours and {minutes} minutes ago'
+        return f'{hours} {hour_str} and {minutes} {minute_str} ago'
 
     # Timedelta one day or greater
     elif days:

@@ -1,16 +1,19 @@
-# 1. Pull subreddit Reddit posts
-# 2. Hash and store in database to register as already seen
-# 3.
+# TODO: Send email with response body
+# TODO: Get html working in email body
+
+
 from pprint import pprint
-import logging
 
 from requests import get
 from typing import List, Dict
 
+from logs import (
+    LOGGER,
+    LOGGER_RESULTS
+)
 from config import (
     USER_AGENT,
     SUBREDDITS,
-    LOGGER,
     LIMIT
 )
 from helpers import (
@@ -47,8 +50,7 @@ def grab_latest() -> List:
             posts[sub] = filter_results(new_posts, sub)
 
     message = format_response(posts)
-    pprint(message)
-
+    LOGGER_RESULTS.info(f'\n{message}')
 
 def _get_subreddit_url(subreddit: str) -> str:
     return f'https://www.reddit.com/r/{subreddit}/new/.json?limit={LIMIT}'

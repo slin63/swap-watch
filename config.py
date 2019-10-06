@@ -1,63 +1,33 @@
-from os import path
-import logging
 import sys
-
+from os import path
+from json import load
 
 # --- Meta ---
 ROOT_DIR = path.dirname(path.abspath(__file__))
+CONFIG_FILE_DIR = f'{ROOT_DIR}/config.json'
 APP_NAME = 'swap-watch'
 VERSION = '0.1'
 
 
+# --- Read from config.json ---
+with open(CONFIG_FILE_DIR) as config_file:
+    CONFIG = load(config_file)
+
+
+# --- Emails ---
+SENDER_EMAIL = CONFIG['email']['sender_email']
+PASSWORD = CONFIG['email']['sender_email_password']
+RECEIVER_EMAIL = CONFIG['email']['receiver_email']
+
+
 # --- Querying ---
 USER_AGENT = f'python:{APP_NAME}:{VERSION}'
-LIMIT = 5
-SUBREDDITS = [
-    'ULGearTrade',
-    'hardwareswap'
-]
-JSON_URLS = [
-    f'https://www.reddit.com/r/{subreddit}/new/.json?limit={LIMIT}' for subreddit in SUBREDDITS
-]
-SEARCH_TERMS = {
-    'ULGearTrade': [
-        'tarp',
-        'quilt'
-    ],
-    'hardwareswap': [
-        'mac'
-    ]
-}
-REJECT_TERMS = {
-    'ULGearTrade': [
-        'wtb'
-    ],
-    'hardwareswap': [
-        'cash'
-    ]
-}
+LIMIT = CONFIG['queries']['limit']
+SUBREDDITS = CONFIG['queries']['subreddits']
+SEARCH_TERMS = CONFIG['queries']['search_terms']
+REJECT_TERMS = CONFIG['queries']['reject_terms']
 
 
 # --- Database ---
-IN_MEMORY = True
-DB_NAME = 'test.db'
-
-
-# --- Logging ---
-LOGGER = logging.getLogger('app')
-LOGGER.setLevel(logging.DEBUG)
-
-# Create console handler, file handler, formatter, and set level to debug
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-ch.setFormatter(formatter)
-
-fh = logging.FileHandler('app.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-
-# Add handlers to logger
-LOGGER.addHandler(ch)
-LOGGER.addHandler(fh)
+IN_MEMORY = CONFIG['database']['in_memory']
+DB_NAME = CONFIG['database']['db_name']
