@@ -6,6 +6,7 @@
 1. Clone this repo to your local machine: `$ git clone https://github.com/slin63/swap-watch && cd swap-watch`
 2. Install dependencies with `$ pipenv install`
 3. Create a new `config.json`: `$ cp sample_config.json config.json`
+  - Note that you can skip adding your email credentials for now and just stick to receiving notifications through the console.
 4. Fill out the config as shown below in the **Config Walkthrough** section
 5. Run the script using `$ pipenv run python main.py`
 6. Receive notifications through both the email you specified and the console view.
@@ -27,12 +28,13 @@
         - The password for your sender email.
     "receiver_email": "your_email@gmail.com",
         - The address you want the notifications sent to.
-    "email_notifications": true
-        - Whether or not to receive email notifications
+    "email_notifications": false
+        - Whether or not to receive email notifications. You can leave
+        this false if you don't want to provide any email credentials.
 ```
 ```
 "queries": {
-    "limit": 5,
+    "limit": 25,
         - How many new posts to scrape at a time.
     "subreddits": [
         "ULGearTrade",

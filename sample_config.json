@@ -4,10 +4,10 @@
         "sender_email": "",
         "sender_email_password": "",
         "receiver_email": "",
-        "email_notifications": true
+        "email_notifications": false
     },
     "queries": {
-        "limit": 10,
+        "limit": 25,
         "subreddits": [],
         "search_terms": {},
         "reject_terms": {}
