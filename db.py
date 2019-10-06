@@ -4,10 +4,10 @@ from logs import LOGGER
 from typing import List, Tuple, Dict
 
 if IN_MEMORY:
-    CONNECTION = connect(':memory:')
+    CONNECTION = connect(':memory:', check_same_thread=False)
     LOGGER.debug('Running with in-memory database')
 else:
-    CONNECTION = connect(f'{ROOT_DIR}/{DB_NAME}')
+    CONNECTION = connect(f'{ROOT_DIR}/{DB_NAME}', check_same_thread=False)
 CURSOR = CONNECTION.cursor()
 
 # Initialize tables and clear posts older than ten days

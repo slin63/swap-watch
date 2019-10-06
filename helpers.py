@@ -97,7 +97,7 @@ def format_response(posts: Dict) -> str:
     for sub in posts:
         new_posts = posts[sub]
         if new_posts:
-            body += f'r/{sub} results:\n------'
+            body += f'r/{sub} results:'
 
             for post in new_posts:
                 body += _format_post(post)
