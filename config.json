@@ -6,31 +6,12 @@
     },
     "queries": {
         "limit": 10,
-        "subreddits": [
-            "ULGearTrade",
-            "hardwareswap"
-        ],
-        "search_terms": {
-            "ULGearTrade": [
-                "tarp",
-                "quilt",
-                "pack"
-            ],
-            "hardwareswap": [
-                "mac"
-            ]
-        },
-        "reject_terms": {
-            "ULGearTrade": [
-                "wtb"
-            ],
-            "hardwareswap": [
-                "cash"
-            ]
-        }
+        "subreddits": [],
+        "search_terms": {},
+        "reject_terms": {}
     },
     "database": {
-        "in_memory": true,
+        "in_memory": false,
         "db_name": "swap-watch.db"
     }
 }
