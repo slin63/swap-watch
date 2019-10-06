@@ -76,18 +76,33 @@ def filter_results(posts: List[Dict], sub: str) -> List[Dict]:
     return filtered
 
 
+def format_subject(posts: Dict) -> str:
+    subj = '[Swap-Watch]: '
+    subs = posts.keys()
+    new_post_count = 0
+    for sub in posts:
+        new_post_count += len(posts[sub])
+
+    if new_post_count:
+        post_str = 'posts' if new_post_count > 1 else 'post'
+        subj += f"{new_post_count} new posts for {', '.join(subs)}"
+
+    return subj
+
+
 def format_response(posts: Dict) -> str:
     header = f'{APP_NAME} results for [{datetime.now()}]:'
     body = ''
 
     for sub in posts:
-        body += f'r/{sub} results:\n------'
         new_posts = posts[sub]
+        if new_posts:
+            body += f'r/{sub} results:\n------'
 
-        for post in new_posts:
-            body += _format_post(post)
+            for post in new_posts:
+                body += _format_post(post)
 
-        body += '\n'
+            body += '\n'
 
     return body.strip()
 

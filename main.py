@@ -1,12 +1,8 @@
-# TODO: Send email with response body
-# TODO: Get html working in email body
-
-
-from pprint import pprint
-
+from datetime import datetime, timedelta
 from requests import get
-from typing import List, Dict
+from typing import List, Dict, Callable
 
+from send_email import send_email
 from logs import (
     LOGGER,
     LOGGER_RESULTS
@@ -14,14 +10,25 @@ from logs import (
 from config import (
     USER_AGENT,
     SUBREDDITS,
-    LIMIT
+    SEARCH_TERMS,
+    REJECT_TERMS,
+    RECEIVER_EMAIL,
+    LIMIT,
+    FREQUENCY
 )
 from helpers import (
     parse_json_response,
     filter_results,
-    format_response
+    format_response,
+    format_subject
 )
 
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+SCHED = BlockingScheduler()
+
+
+@SCHED.scheduled_job('interval', minutes=FREQUENCY * 60)
 def grab_latest() -> List:
     """
     Grab the latest [LIMIT] posts from subreddits inside [SUBREDDITS]
@@ -32,8 +39,8 @@ def grab_latest() -> List:
     posts = {}
 
     for sub in SUBREDDITS:
-        pprint(sub)
         url = _get_subreddit_url(sub)
+        LOGGER.debug(f'Querying: {url}')
         response = get(
             url,
             headers={'User-Agent': USER_AGENT}
@@ -49,12 +56,27 @@ def grab_latest() -> List:
         if new_posts:
             posts[sub] = filter_results(new_posts, sub)
 
+    subject = format_subject(posts)
     message = format_response(posts)
+    if not message:
+        LOGGER_RESULTS.info('No new posts.')
+        return
+
     LOGGER_RESULTS.info(f'\n{message}')
+    send_email(subject, message)
+
 
 def _get_subreddit_url(subreddit: str) -> str:
     return f'https://www.reddit.com/r/{subreddit}/new/.json?limit={LIMIT}'
 
 
 if __name__ == "__main__":
+    LOGGER.debug(
+        f'App started, configured to run every {FREQUENCY * 60} minutes.\n'
+        f'Running for subreddits: {SUBREDDITS} with following matching terms:\n'
+        f'\tsearch: {SEARCH_TERMS}\n'
+        f'\treject: {REJECT_TERMS}\n'
+        f'Notifications being sent to {RECEIVER_EMAIL} and stored to \'results.log\'.'
+    )
     grab_latest()
+    SCHED.start()

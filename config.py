@@ -14,6 +14,11 @@ with open(CONFIG_FILE_DIR) as config_file:
     CONFIG = load(config_file)
 
 
+# --- Frequency ---
+# How many times to run the query in hours.
+FREQUENCY = CONFIG['frequency']
+
+
 # --- Emails ---
 SENDER_EMAIL = CONFIG['email']['sender_email']
 PASSWORD = CONFIG['email']['sender_email_password']

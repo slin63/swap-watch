@@ -1,9 +1,11 @@
 from sqlite3 import connect
 from config import DB_NAME, ROOT_DIR, IN_MEMORY
+from logs import LOGGER
 from typing import List, Tuple, Dict
 
 if IN_MEMORY:
     CONNECTION = connect(':memory:')
+    LOGGER.debug('Running with in-memory database')
 else:
     CONNECTION = connect(f'{ROOT_DIR}/{DB_NAME}')
 CURSOR = CONNECTION.cursor()
