@@ -25,8 +25,10 @@
         https://support.google.com/accounts/answer/6010255
     "sender_email_password": "p@ssw0rDz",
         - The password for your sender email.
-    "receiver_email": "your_email@gmail.com"
+    "receiver_email": "your_email@gmail.com",
         - The address you want the notifications sent to.
+    "email_notifications": true
+        - Whether or not to receive email notifications
 ```
 ```
 "queries": {
@@ -48,6 +50,7 @@
     },
         - A key:value list of terms to search for in the titles of the posts from
         each respective subreddit.
+        Can be left empty to just grab all posts.
     "reject_terms": {
         "ULGearTrade": [
             "wtb",

@@ -23,6 +23,7 @@ FREQUENCY = CONFIG['frequency']
 SENDER_EMAIL = CONFIG['email']['sender_email']
 PASSWORD = CONFIG['email']['sender_email_password']
 RECEIVER_EMAIL = CONFIG['email']['receiver_email']
+EMAIL_NOTIFICATIONS = CONFIG['email']['email_notifications']
 
 
 # --- Querying ---

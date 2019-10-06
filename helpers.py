@@ -48,11 +48,13 @@ def parse_json_response(json_response: Dict) -> List[Dict]:
 def filter_results(posts: List[Dict], sub: str) -> List[Dict]:
     search_terms = SEARCH_TERMS[sub]
     reject_terms = REJECT_TERMS[sub]
+
     filtered = []
 
     for post in posts:
-        matches = []
-        rejections = []
+        # Handle if user doesn't specify search or reject keywords
+        matches = [] if search_terms else [True]
+        rejections = [] if reject_terms else [False]
 
         # Check for terms that match what we're looking for
         for search_term in search_terms:
@@ -109,7 +111,10 @@ def format_response(posts: Dict) -> str:
 
 def _format_post(post: Dict) -> str:
     link_message = f"Message poster: https://www.reddit.com/message/compose/?to={post['username']}"
-    matched_because = f"Matching terms: {', '.join(post['matches'])}"
+    if not post.get('matches'):
+        matched_because = f"No matching keys specified for this subreddit."
+    else:
+        matched_because = f"Matching terms: {', '.join(post.get('matches', []))}."
     time_since_post = __human_readable_timedelta(datetime.now() - post['created_utc'])
 
     body = f"""

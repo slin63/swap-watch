@@ -3,7 +3,8 @@
     "email": {
         "sender_email": "",
         "sender_email_password": "",
-        "receiver_email": ""
+        "receiver_email": "",
+        "email_notifications": true
     },
     "queries": {
         "limit": 10,

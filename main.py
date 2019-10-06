@@ -13,8 +13,9 @@ from config import (
     SEARCH_TERMS,
     REJECT_TERMS,
     RECEIVER_EMAIL,
+    EMAIL_NOTIFICATIONS,
     LIMIT,
-    FREQUENCY
+    FREQUENCY,
 )
 from helpers import (
     parse_json_response,
@@ -63,7 +64,9 @@ def grab_latest() -> List:
         return
 
     LOGGER_RESULTS.info(f'\n{message}')
-    send_email(subject, message)
+
+    if EMAIL_NOTIFICATIONS:
+        send_email(subject, message)
 
 
 def _get_subreddit_url(subreddit: str) -> str:
