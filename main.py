@@ -41,17 +41,16 @@ def grab_latest() -> List:
 
     for sub in SUBREDDITS:
         url = _get_subreddit_url(sub)
-        LOGGER.debug(f'Querying: {url}')
-        response = get(
-            url,
-            headers={'User-Agent': USER_AGENT}
-        )
+        LOGGER.debug(f"Querying: {url}")
+        response = get(url, headers={"User-Agent": USER_AGENT})
 
         try:
             new_posts = parse_json_response(response.json())
 
         except Exception as e:
-            LOGGER.exception(f'Request to {url} failed with code {response.status_code}: {response.reason}')
+            LOGGER.exception(
+                f"Request to {url} failed with code {response.status_code}: {response.reason}"
+            )
 
         # We got some posts we haven't seen before. Let's filter through them
         if new_posts:
@@ -60,26 +59,26 @@ def grab_latest() -> List:
     subject = format_subject(posts)
     message = format_response(posts)
     if not message:
-        LOGGER_RESULTS.info('No new posts.')
+        LOGGER_RESULTS.info("No new posts.")
         return
 
-    LOGGER_RESULTS.info(f'\n{message}')
+    LOGGER_RESULTS.info(f"\n{message}")
 
     if EMAIL_NOTIFICATIONS:
         send_email(subject, message)
 
 
 def _get_subreddit_url(subreddit: str) -> str:
-    return f'https://www.reddit.com/r/{subreddit}/new/.json?limit={LIMIT}'
+    return f"https://www.reddit.com/r/{subreddit}/new/.json?limit={LIMIT}"
 
 
 if __name__ == "__main__":
     LOGGER.debug(
-        f'App started, configured to run every {FREQUENCY * 60} minutes.\n'
-        f'Running for subreddits: {SUBREDDITS} with following matching terms:\n'
-        f'\tsearch: {SEARCH_TERMS}\n'
-        f'\treject: {REJECT_TERMS}\n'
-        f'Notifications being sent to {RECEIVER_EMAIL} and stored to \'results.log\'.'
+        f"App started, configured to run every {FREQUENCY * 60} minutes.\n"
+        f"Running for subreddits: {SUBREDDITS} with following matching terms:\n"
+        f"\tsearch: {SEARCH_TERMS}\n"
+        f"\treject: {REJECT_TERMS}\n"
+        f"Notifications being sent to {RECEIVER_EMAIL} and stored to 'results.log'."
     )
     grab_latest()
     SCHED.start()
