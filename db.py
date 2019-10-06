@@ -15,6 +15,7 @@ CURSOR.execute('''
     title text,
     url text,
     subreddit text,
+    username text,
     create_date text);
 ''')
 
@@ -31,7 +32,7 @@ def add_new_posts(new_posts: List[Dict]) -> int:
         to_insert.append(tuple(post.values()))
 
     insert_statement = CURSOR.executemany(f'''
-        INSERT INTO posts (id, title, url, subreddit, create_date) VALUES (?, ?, ?, ?, ?)
+        INSERT INTO posts (id, title, url, subreddit, username, create_date) VALUES (?, ?, ?, ?, ?, ?)
     ''', to_insert)
 
     CONNECTION.commit()

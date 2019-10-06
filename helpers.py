@@ -1,15 +1,16 @@
 import logging
-from pprint import pprint
+import math
 
 from json import loads
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List
 
 from db import existing_ids, add_new_posts
 from config import (
     LOGGER,
     SEARCH_TERMS,
-    REJECT_TERMS
+    REJECT_TERMS,
+    APP_NAME
 )
 
 def parse_json_response(json_response: Dict) -> List[Dict]:
@@ -32,6 +33,7 @@ def parse_json_response(json_response: Dict) -> List[Dict]:
                 'title': post['title'],
                 'url': post['url'],
                 'subreddit': post['subreddit'],
+                'username': post['author'],
                 'created_utc': datetime.fromtimestamp(post['created_utc']),
             })
 
@@ -53,7 +55,13 @@ def filter_results(posts: List[Dict], sub: str) -> List[Dict]:
 
         # Check for terms that match what we're looking for
         for search_term in search_terms:
-            matches.append(search_term.lower() in post['title'].lower())
+            match = search_term.lower() in post['title'].lower()
+            matches.append(match)
+            if match:
+                if post.get('matches'):
+                    post['matches'].append(search_term)
+                else:
+                    post['matches'] = [search_term]
 
         # Check for terms that we will reject
         for reject_term in reject_terms:
@@ -68,5 +76,58 @@ def filter_results(posts: List[Dict], sub: str) -> List[Dict]:
 
 
 def format_response(posts: Dict) -> str:
-    import ipdb; ipdb.set_trace()  # breakpoint 9173b049 //
+    header = f'{APP_NAME} results for [{datetime.now()}]:'
+    body = ''
+    for sub in posts:
+        new_posts = posts[sub]
+        for post in new_posts:
+            post_str = _format_post(post)
+
     return ''
+
+
+def _format_post(post: Dict) -> str:
+    link_post = __hyperlink(post['url'], post['title'])
+    link_message = __hyperlink(f"https://www.reddit.com/message/compose/?to={post['username']}", f"Message {post['username']} now!")
+    matched_because = f"Matching terms: <b>{', '.join(post['matches'])}</b>"
+    time_since_post = __human_readable_timedelta(datetime.now() - post['created_utc'])
+
+    body = f"""
+<h4>{link_post}</h4>
+<h5>Posted {time_since_post}.</h5>
+<h5>{link_message}</h5>
+{matched_because}
+"""
+
+    return body
+
+
+def __hyperlink(url: str, text: str) -> str:
+    return f'<a href=\"{url}\">{text}</a>'
+
+
+def __human_readable_timedelta(dt: timedelta) -> str:
+    """
+    Return a human readable time delta, assuming posts will never be more than 10 days old.
+    """
+    days = math.floor(dt.seconds / 86400)
+    hours = math.floor((dt.seconds - (math.floor(days) * 86400)) / 3600)
+    minutes = math.floor((dt.seconds - (math.floor(hours) * 3600)) / 60)
+
+    # Timedelta less than one hour
+    if not hours and not days and minutes:
+        return f'{minutes} minutes ago'
+
+    # Timedelta less than one day
+    elif not days and hours:
+        return f'{hours} hours and {minutes} minutes ago'
+
+    # Timedelta one day or greater
+    elif days:
+        if days == 1:
+            return 'yesterday'
+        else:
+            return f'{days} days ago'
+
+    else:
+        return 'just now'

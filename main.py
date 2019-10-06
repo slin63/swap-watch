@@ -19,7 +19,6 @@ from helpers import (
     format_response
 )
 
-
 def grab_latest() -> List:
     """
     Grab the latest [LIMIT] posts from subreddits inside [SUBREDDITS]
