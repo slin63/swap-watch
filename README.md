@@ -1,4 +1,5 @@
 # swap-watch
+![demo](https://i.imgur.com/SoQXR0T.png)
 A tool that watches for spicy deals from your favorite `r/<thing>swap` Subreddits and notifies you with the latest updates.
 
 ## Setup
