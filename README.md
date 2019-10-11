@@ -1,5 +1,5 @@
 # swap-watch
-![demo](https://lh3.googleusercontent.com/_h76b_nyk49goW-Y3LfLhoW-EN9JagjLjvY2GurVogE-ixqzv1xObzkpnXYuzQMueM5bXPr0XpQ37YKxvYiddBoWrSm5T34qVkB35NckUOzLFjzW1wFdgyfABFgmDxae8ge-tyYHcP5yclp2YaxsvDfJ4tv1n3MOvFUca_REcgcgfsdAXJ0kQo12WFDnw1xAAO5T8Ztp8-7EgYuGNIKqToTZYq2DINQ7l4sGkGzcqf3qfZ7QUPBj7nq3rjTE_hv5x-oU93R7_TM9NXPvO2hKxcfAaYdhcpw8NFVRtOQ6iU-P02Xh0eI4m34WcFJnb2e9W1asamvZ39-fN4lkgSrahKi4K11AkPixGYwT6If_kGeFCvkp6rl2JgH2TKwjf50PmtUOnURlr2txZV4eSck4HV2fna6Dts0zBj4Fb2XC_F91WvaXunZTb3ndTA0jUpg-By4TCLxs0duoJDae5C8ZkpVaaL3c5kydal1ZcwmjlBeQRkEuOoWkFi9m_FySQYHnZ18QlKSZvdKord-eJawePnPpnQ_YR2hF7qekA6kCAaIVYAz5CoxQ1mMfLgEScdGUZ6xs_vpwpq0OTJnC6dEzAnHIHzQ4jOqFHe5DAsi8Noj78xgIIS7DtQay=s1560-w1560-h455-no)A tool that watches for spicy deals from your favorite `r/<thing>swap` Subreddits and notifies you with the latest updates.
+A tool that watches for spicy deals from your favorite `r/<thing>swap` Subreddits and notifies you with the latest updates.
 
 ## Setup
 1. Clone this repo to your local machine: `$ git clone https://github.com/slin63/swap-watch && cd swap-watch`
